@@ -19,8 +19,8 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-//    @GetMapping("/api/public/categories")
-    @RequestMapping(value="/public/categories",method=RequestMethod.GET)
+    @GetMapping("/api/public/categories")
+//    @RequestMapping(value="/public/categories",method=RequestMethod.GET)
     public ResponseEntity<List<Category>> getAllCategories(){
         return new ResponseEntity<>(categoryService.getAllCategories(),HttpStatus.OK);
     }
