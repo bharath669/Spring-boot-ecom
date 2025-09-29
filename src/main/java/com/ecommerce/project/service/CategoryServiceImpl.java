@@ -11,10 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-public class CategoryServiceImpl extends CategoryResponse implements CategoryService{
+public class CategoryServiceImpl implements CategoryService{
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -35,12 +34,14 @@ public class CategoryServiceImpl extends CategoryResponse implements CategorySer
     }
 
     @Override
-    public void createCategory(Category category) {
-        Category savedCategory=categoryRepository.findByCategoryName(category.getCategoryName());
-        if(savedCategory!=null){
-            throw new APIException("Category with Name "+category.getCategoryName()+" Already Exist");
+    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
+        Category category=modelMapper.map(categoryDTO, Category.class);
+        Category categoryFromDb  =categoryRepository.findByCategoryName(categoryDTO.getCategoryName());
+        if(categoryFromDb !=null){
+            throw new APIException("Category with Name "+categoryDTO.getCategoryName()+" Already Exist");
         }
-        categoryRepository.save(category);
+        Category savedCategory=categoryRepository.save(category);
+        return modelMapper.map(savedCategory, CategoryDTO.class);
     }
 
     @Override
