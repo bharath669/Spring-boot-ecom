@@ -1,7 +1,6 @@
 package com.ecommerce.project.controller;
 
 import com.ecommerce.project.model.Product;
-import com.ecommerce.project.payload.CategoryResponse;
 import com.ecommerce.project.payload.ProductDTO;
 import com.ecommerce.project.payload.ProductResponse;
 import com.ecommerce.project.service.ProductService;
@@ -31,9 +30,14 @@ public class ProductController {
         ProductResponse productResponse=productService.searchByCategory(categoryId);
         return new ResponseEntity<>(productResponse,HttpStatus.OK);
     }
-    @GetMapping("public/products/keyword/{keyword}")
+    @GetMapping("/public/products/keyword/{keyword}")
     public ResponseEntity<ProductResponse> getCategoryByKeyword(@PathVariable String keyword){
         ProductResponse productResponse=productService.searchProductByKeyword(keyword);
         return new ResponseEntity<>(productResponse,HttpStatus.FOUND);
+    }
+    @PutMapping("/admin/products/{productId}")
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long productId,@RequestBody Product product){
+        ProductDTO updatedproductDTO=productService.updateProduct(productId,product);
+        return new ResponseEntity<>(updatedproductDTO,HttpStatus.OK);
     }
 }
