@@ -16,20 +16,28 @@ import java.util.HashSet;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "users")
+@Table(name = "users",
+        uniqueConstraints = {
+        @UniqueConstraint(columnNames = "username"),
+        @UniqueConstraint(columnNames = "email")
+})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long userId;
     @NotBlank
     @Size(max=20)
+    @Column(name = "username")
     private String userName;
     @NotBlank
     @Size(max = 50)
     @Email
+    @Column(name = "email")
     private String email;
     @NotBlank
     @Size(max = 100)
+    @Column(name = "password")
     private String password;
 
     public User(String userName, String email, String password) {
