@@ -49,7 +49,7 @@ public class webSecurityConfig {
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder() );
         return daoAuthenticationProvider;
     }
-
+    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }

@@ -1,6 +1,6 @@
 package com.ecommerce.project.security.request;
 
-import com.ecommerce.project.model.Role;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
