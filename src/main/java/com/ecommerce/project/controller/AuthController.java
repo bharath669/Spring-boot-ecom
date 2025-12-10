@@ -118,14 +118,23 @@ public class AuthController {
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("user registered successfully"));
     }
-
     @GetMapping("/username")
-    public String currentUsername(Authentication authentication){
+    public String getUsername(Authentication authentication){
         if(authentication!=null){
             return authentication.getName();
         }
-        else{
+        else {
             return "";
         }
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<?> getUserDetails(Authentication authentication){
+        UserDetailsImpl userDetails= (UserDetailsImpl) authentication.getPrincipal();
+        List<String> roles=userDetails.getAuthorities().stream()
+                .map(item->item.getAuthority())
+                .collect(Collectors.toList());
+        UserInfoResponse loginResponse=new UserInfoResponse(userDetails.getId(),userDetails.getUsername(),roles);
+        return ResponseEntity.ok().body(loginResponse);
     }
 }
