@@ -118,4 +118,14 @@ public class AuthController {
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("user registered successfully"));
     }
+
+    @GetMapping("/username")
+    public String currentUsername(Authentication authentication){
+        if(authentication!=null){
+            return authentication.getName();
+        }
+        else{
+            return "";
+        }
+    }
 }
