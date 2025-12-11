@@ -10,19 +10,21 @@ import com.ecommerce.project.payload.ProductDTO;
 import com.ecommerce.project.repositories.CartItemRepository;
 import com.ecommerce.project.repositories.CartRepository;
 import com.ecommerce.project.repositories.ProductRepository;
+import com.ecommerce.project.util.AuthUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+@Service
 public class CartServiceImpl implements CartService{
     @Autowired
     private CartRepository cartRepository;
 
     @Autowired
-    AuthUtil authUtil;
+    private AuthUtil authUtil;
 
     @Autowired
     ProductRepository productRepository;
@@ -47,7 +49,7 @@ public class CartServiceImpl implements CartService{
             throw new APIException("product"+product.getProductName()+"is already exist");
         }
         if(product.getQuantity()==0){
-            throw new APIException(product.getProductName()+"is not available")
+            throw new APIException(product.getProductName()+"is not available");
         }
         if(product.getQuantity()<quantity){
             throw new APIException("please make an order"+product.getProductName()
@@ -69,7 +71,7 @@ public class CartServiceImpl implements CartService{
         cartRepository.save(cart);
         //return updated cart
         CartDTO cartDTO=modelMapper.map(cart,CartDTO.class);
-        List<CartItem> cartItems=new ArrayList<>();
+        List<CartItem> cartItems=cart.getCartItems();
         Stream<ProductDTO> productStream=cartItems.stream().map(
                 item-> {
                     ProductDTO map = modelMapper.map(item.getProduct(), ProductDTO.class);
