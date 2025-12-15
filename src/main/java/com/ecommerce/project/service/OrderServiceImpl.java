@@ -6,6 +6,7 @@ import com.ecommerce.project.model.*;
 import com.ecommerce.project.payload.OrderDTO;
 import com.ecommerce.project.payload.OrderItemDTO;
 import com.ecommerce.project.repositories.*;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,7 @@ public class OrderServiceImpl implements  OrderService{
     ModelMapper modelMapper;
 
     @Override
+    @Transactional
     public OrderDTO placeOrder(String emailId, Long addressId, String paymentMethod, String pgName, String pgPaymentId, String pgStatus, String pgMessageResponse) {
         //Getting User Cart
         Cart cart=cartRepository.findCartByEmail(emailId);
@@ -62,8 +64,8 @@ public class OrderServiceImpl implements  OrderService{
 
         Payment payment=new Payment(paymentMethod,pgPaymentId,pgMessageResponse,pgName,pgStatus);
         payment.setOrder(order);
-        payment=paymentRepository.save(payment);
         order.setPayment(payment);
+        payment=paymentRepository.save(payment);
 
         Order savedOrder=orderRepository.save(order);
         //Get items from the cart into the order items
@@ -94,9 +96,8 @@ public class OrderServiceImpl implements  OrderService{
         });
         //Send back the order summary
         OrderDTO orderDTO=modelMapper.map(savedOrder, OrderDTO.class);
-        orderItems.forEach(item->
-                orderDTO.getOrderItemDTOS().add(modelMapper.map(item, OrderItemDTO.class)));
-        orderDTO.setAddressDTO(addressId);
+        orderItems.forEach(item -> orderDTO.getOrderItemDTOS().add(modelMapper.map(item, OrderItemDTO.class)));
+        orderDTO.setAddressId(addressId);
         return orderDTO;
     }
 }
